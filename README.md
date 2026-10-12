@@ -158,6 +158,18 @@ colcon test-result --verbose
 硬件接口、话题和安全状态检查见各工作区 README。真实机器人参数不能直接照搬默认
 值，尤其是雷达/机械臂安装 TF、TCP、工作空间、夹爪限制和目标地图坐标。
 
+## 协作与分工
+
+项目初始版本由 [@lljj123](https://github.com/lljj123) 和
+[@GGbond61](https://github.com/GGbond61) 共同完成：`@lljj123` 主要维护导航、SLAM
+和 `slam_ws/`，`@GGbond61` 主要维护视觉抓取和 `visual_grasp_ws/`；
+`nav_grasp_ws/` 和实机联调由双方共同负责。贡献者列表见
+[CONTRIBUTORS.md](CONTRIBUTORS.md)。
+
+协作时从 `main` 创建功能分支，通过 Pull Request 合并；跨模块修改由
+另一位负责人审查。分支命名、测试要求、Commit 身份和实机安全规则见
+[CONTRIBUTING.md](CONTRIBUTING.md)。
+
 ## License
 
 项目自有代码使用 Apache-2.0，详见 [LICENSE](LICENSE)。第三方代码和依赖见
