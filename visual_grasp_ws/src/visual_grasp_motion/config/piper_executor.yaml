@@ -1,0 +1,89 @@
+piper_pick_executor:
+  ros__parameters:
+    # Launch argument overrides this. False is intentionally the default.
+    allow_robot_commands: false
+    base_frame: piper_base_link
+    pick_sequence_topic: /visual_grasp/pick_sequence
+    move_p_topic: /arm/control/move_p
+    move_l_topic: /arm/control/move_l
+    move_j_topic: /arm/control/move_j
+    gripper_command_topic: /arm/control/joint_states
+    joint_feedback_topic: /arm/feedback/joint_states
+    # The AGX driver must keep tcp_offset all zeros; this is flange feedback.
+    flange_feedback_topic: /arm/feedback/tcp_pose
+    arm_status_topic: /arm/feedback/arm_status
+    gripper_status_topic: /arm/feedback/gripper_status
+
+    # Physical grasp center relative to the flange, expressed in flange axes.
+    tcp_offset_xyz_m: [0.0, 0.0, 0.142]
+    tcp_workspace_min_xyz_m: [0.15, -0.35, -0.120]
+    tcp_workspace_max_xyz_m: [0.60, 0.35, 0.35]
+    # With a tool-down 142 mm TCP, tcp_z=-0.120 corresponds to flange_z≈0.022.
+    flange_workspace_min_xyz_m: [0.05, -0.45, 0.020]
+    flange_workspace_max_xyz_m: [0.70, 0.45, 0.70]
+    grasp_z_min_m: -0.120
+    grasp_z_max_m: 0.200
+    min_approach_height_m: 0.060
+    max_tool_tilt_deg: 12.0
+
+    max_plan_age_s: 5.0
+    max_feedback_age_s: 0.6
+    motion_timeout_s: 20.0
+    gripper_timeout_s: 8.0
+    # Repeat low-force commands because a single CAN frame can be missed.
+    gripper_command_repeat_s: 0.5
+    require_gripper_homed: true
+    # Firmware S-V1.9-1 never asserts homing_status on this unit. Allow the
+    # fallback only when the independently measured endpoint report validates.
+    # Public/default profile stays fail-closed. Set true only in a local robot
+    # profile after independently validating the endpoint report.
+    allow_verified_unhomed_gripper: false
+    gripper_range_report_path: ~/.config/nav_grasp/gripper/manual_gripper_range.json
+    gripper_range_expected_firmware: S-V1.9-1
+    gripper_range_closed_abs_limit_m: 0.002
+    gripper_range_min_span_m: 0.070
+    gripper_range_max_span_m: 0.085
+    gripper_range_max_jitter_m: 0.001
+    motion_settle_s: 0.4
+    # One-call mode visibly stops above the block before descending.
+    automatic_pregrasp_hold_s: 1.0
+    position_tolerance_m: 0.006
+    orientation_tolerance_deg: 5.0
+
+    # After a successful vertical lift and in-air straighten, fold the arm to
+    # the reference posture measured on 2026-10-10.  MoveJ receives all six
+    # joints, while the generous completion tolerance means the measured
+    # posture only needs to be approximately reached.
+    # The public profile must not command a robot-specific posture.
+    move_to_carry_after_pick: false
+    carry_joint_names: [joint1, joint2, joint3, joint4, joint5, joint6]
+    carry_joint_positions_rad: [0.0, 0.46, -0.74, 0.0, 1.05, 0.0]
+    carry_joint_tolerance_deg: 6.0
+    # PiPER-H model limits; executor refuses to start if the configured carry
+    # target is outside these bounds.
+    carry_joint_limits_min_rad: [-2.61799, 0.0, -2.96706, -1.74533, -1.22173, -2.09440]
+    carry_joint_limits_max_rad: [2.61799, 3.14159, 0.0, 1.74533, 1.22173, 2.09440]
+
+    # 50 mm clears a 30 mm cube while limiting unnecessary finger travel.
+    gripper_open_width_m: 0.050
+    gripper_close_width_m: 0.0
+    # The measured mechanical range is 79.8 mm; keep an additional hard-stop
+    # margin and never publish commands outside 0--70 mm.
+    gripper_command_min_width_m: 0.0
+    gripper_command_max_width_m: 0.070
+    gripper_force_n: 1.0
+    gripper_open_tolerance_m: 0.006
+    gripper_close_settle_s: 1.5
+    # Width mode has no speed field. Ramp by 4 mm every 0.2 s instead of
+    # jumping directly from 50 mm to zero (about 20 mm/s average).
+    gripper_close_step_m: 0.004
+    gripper_close_step_interval_s: 0.2
+    # A grasped 30 mm cube should leave the fingers about 30 mm apart.
+    # Near-zero (empty) and still-wide (miss/jam) closures are failures.
+    object_width_min_m: 0.020
+    object_width_max_m: 0.040
+    # After an authorized grasp attempt, retract, open, re-detect and retry
+    # once when the width check fails.
+    max_grasp_retries: 1
+    retry_detection_settle_s: 0.8
+    retry_plan_timeout_s: 4.0

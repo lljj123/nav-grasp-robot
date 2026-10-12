@@ -1,0 +1,37 @@
+grasp_candidate_planner:
+  ros__parameters:
+    target_color: any
+    pregrasp_height_m: 0.090
+    lift_height_m: 0.100
+    max_detection_age_s: 0.5
+    min_confidence: 0.75
+    # Depth-centre mode must include the lowest approved support surface.
+    workspace_min_xyz_m: [0.10, -0.45, -0.12]
+    workspace_max_xyz_m: [0.65, 0.45, 0.60]
+    # Default: use each cube's live D435 depth-derived centre height.  The old
+    # calibration-board/box plane remains below only as an explicit fallback:
+    # set height_source to fixed_plane when that physical plane is restored.
+    height_source: depth_center
+    support_plane_z_m: -0.004454
+    support_plane_reference_x_m: 0.260290
+    support_plane_reference_y_m: -0.009180
+    support_plane_dz_dx: -0.136599
+    support_plane_dz_dy: -0.004044
+    cube_height_m: 0.030
+    # Keep the physical TCP fixed. Use this only for a uniform residual height
+    # correction after checking several blocks; positive values grasp higher.
+    grasp_center_z_offset_m: 0.0
+    # Measured planar correction in piper_base_link. +X is arm-forward.
+    # Apply to pregrasp/grasp/lift/straighten to keep the descent vertical.
+    target_offset_x_m: 0.020
+    target_offset_y_m: 0.0
+    # Verified original tool-down attitude; this does not add a 90 degree turn.
+    tool_down_quaternion_xyzw: [-0.00136, 0.99912, -0.00628, 0.04156]
+    # Align a horizontal gripper axis with the nearest equivalent cube side.
+    # A square repeats every 90 degrees, so the selected wrist adjustment is
+    # limited to about +/-45 degrees. Tune offset only if the physical jaw axis
+    # is found to be mounted at a fixed angular bias.
+    align_grasp_to_block: true
+    grasp_yaw_offset_deg: 0.0
+    # Lift vertically at the grasp angle, then restore the quaternion above.
+    straighten_after_lift: true

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>visual_grasp_bringup</name>
+  <version>0.1.0</version>
+  <description>Launch and system configuration for the PiPER D435 grasp stack.</description>
+  <maintainer email="nav-grasp@users.noreply.github.com">Nav-Grasp Maintainers</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_python</buildtool_depend>
+  <exec_depend>agx_arm_description</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>xacro</exec_depend>
+  <exec_depend>visual_grasp_calibration</exec_depend>
+  <exec_depend>visual_grasp_motion</exec_depend>
+  <exec_depend>visual_grasp_perception</exec_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
+

@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="nav_grasp_robot">
+  <xacro:arg name="base_frame" default="base_link"/>
+  <xacro:arg name="lidar_frame" default="livox_frame"/>
+  <xacro:arg name="manipulator_base_frame" default="piper_base_link"/>
+
+  <xacro:arg name="lidar_x" default="0.15"/>
+  <xacro:arg name="lidar_y" default="0.0"/>
+  <xacro:arg name="lidar_z" default="0.10"/>
+  <xacro:arg name="lidar_roll" default="0.0"/>
+  <xacro:arg name="lidar_pitch" default="0.0"/>
+  <xacro:arg name="lidar_yaw" default="0.0"/>
+
+  <xacro:arg name="manipulator_x" default="0.0"/>
+  <xacro:arg name="manipulator_y" default="0.0"/>
+  <xacro:arg name="manipulator_z" default="0.15"/>
+  <xacro:arg name="manipulator_yaw" default="0.0"/>
+
+  <link name="base_footprint"/>
+  <link name="$(arg base_frame)">
+    <visual>
+      <origin xyz="0 0 0.10" rpy="0 0 0"/>
+      <geometry><box size="0.55 0.45 0.20"/></geometry>
+      <material name="base_gray"><color rgba="0.25 0.28 0.32 1"/></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.10" rpy="0 0 0"/>
+      <geometry><box size="0.55 0.45 0.20"/></geometry>
+    </collision>
+  </link>
+  <joint name="base_footprint_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="$(arg base_frame)"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="$(arg lidar_frame)"/>
+  <joint name="lidar_mount_joint" type="fixed">
+    <parent link="$(arg base_frame)"/>
+    <child link="$(arg lidar_frame)"/>
+    <origin
+      xyz="$(arg lidar_x) $(arg lidar_y) $(arg lidar_z)"
+      rpy="$(arg lidar_roll) $(arg lidar_pitch) $(arg lidar_yaw)"/>
+  </joint>
+
+  <link name="$(arg manipulator_base_frame)"/>
+  <joint name="manipulator_mount_joint" type="fixed">
+    <parent link="$(arg base_frame)"/>
+    <child link="$(arg manipulator_base_frame)"/>
+    <origin
+      xyz="$(arg manipulator_x) $(arg manipulator_y) $(arg manipulator_z)"
+      rpy="0 0 $(arg manipulator_yaw)"/>
+  </joint>
+</robot>

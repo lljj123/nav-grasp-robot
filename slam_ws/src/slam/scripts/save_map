@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+OUTPUT_PATH="${1:-${NAV_GRASP_MAP_PREFIX:-$PWD/map}}"
+mkdir -p "$(dirname -- "$OUTPUT_PATH")"
+
+ros2 run nav2_map_server map_saver_cli -f "$OUTPUT_PATH"
+ros2 service call /slam_toolbox/serialize_map \
+  slam_toolbox/srv/SerializePoseGraph \
+  "{filename: '$OUTPUT_PATH'}"
+
+echo "地图已保存：${OUTPUT_PATH}.yaml/.pgm 和 ${OUTPUT_PATH}.posegraph"

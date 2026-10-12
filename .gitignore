@@ -1,0 +1,28 @@
+# ROS 2 / colcon outputs
+**/build/
+**/install/
+**/log/
+
+# Python and test caches
+**/__pycache__/
+**/.pytest_cache/
+*.py[cod]
+**/*.egg-info/
+
+# Editors and local configuration
+.vscode/
+.idea/
+config/project.env
+**/*.local.yaml
+
+# Runtime data and recordings
+**/*.bag
+**/*.db3
+**/*.mcap
+**/logs/
+
+# Robot- and site-specific generated data
+visual_grasp_ws/calibration/handeye.yaml
+visual_grasp_ws/calibration/handeye_samples.yaml
+slam_ws/maps/*
+!slam_ws/maps/.gitkeep

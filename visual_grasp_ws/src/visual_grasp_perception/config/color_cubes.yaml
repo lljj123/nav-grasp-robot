@@ -1,0 +1,27 @@
+color_cube_detector:
+  ros__parameters:
+    rgb_topic: /camera/camera/color/image_raw
+    depth_topic: /camera/camera/aligned_depth_to_color/image_raw
+    camera_info_topic: /camera/camera/color/camera_info
+    output_frame: piper_base_link
+    cube_size_m: 0.030
+    # RGB-D point is assumed on the cube top; output pose is the cube center.
+    top_to_center_m: 0.015
+    depth_scale: 0.001
+    min_depth_m: 0.12
+    max_depth_m: 1.20
+    roi_xywh: [0, 0, 640, 480]
+    min_area_px: 100.0
+    max_area_px: 30000.0
+    min_square_ratio: 0.55
+    morphology_kernel: 5
+    # The current red cube is H≈2--6 while the orange support box is H≈8.
+    # Keep the two red wraparound bands configurable for lighting changes.
+    red_hue_upper: 6
+    red_hue_wrap_lower: 170
+    physical_side_min_m: 0.015
+    physical_side_max_m: 0.055
+    sync_slop_s: 0.08
+    # PiPER CAN pose stamps can lag D435 images. Only safe while the arm is still.
+    max_latest_tf_age_s: 0.7
+

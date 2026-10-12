@@ -1,0 +1,33 @@
+name: static-checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  syntax-and-config:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install validators
+        run: sudo apt-get update && sudo apt-get install -y python3-yaml zsh
+      - name: Check shell syntax
+        run: |
+          find . -type f \( -name '*.sh' -o -name '*.bash' \) -print0 |
+            xargs -0 -n1 bash -n
+          find . -type f -name '*.zsh' -print0 | xargs -0 -n1 zsh -n
+      - name: Check Python, XML, and YAML
+        run: |
+          python3 -m compileall -q -f slam_ws visual_grasp_ws nav_grasp_ws
+          python3 - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          import yaml
+
+          for path in Path('.').rglob('package.xml'):
+              ET.parse(path)
+          for path in Path('.').rglob('*'):
+              if path.suffix in {'.yaml', '.yml'}:
+                  with path.open(encoding='utf-8') as stream:
+                      yaml.safe_load(stream)
+          PY

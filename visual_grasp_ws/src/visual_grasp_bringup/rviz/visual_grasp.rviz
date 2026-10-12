@@ -1,0 +1,256 @@
+Panels:
+  - Class: rviz_common/Displays
+    Help Height: 75
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /Global Options1
+        - /PiPER-H1
+        - /Perception1
+        - /Pick plan1
+      Splitter Ratio: 0.52
+    Tree Height: 690
+  - Class: rviz_common/Selection
+    Name: Selection
+  - Class: rviz_common/Views
+    Expanded:
+      - /Current View1
+    Name: Views
+    Splitter Ratio: 0.5
+  - Class: rviz_common/Time
+    Experimental: false
+    Name: Time
+    SyncMode: 0
+    SyncSource: ""
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 0.45
+      Cell Size: 0.1
+      Class: rviz_default_plugins/Grid
+      Color: 110; 110; 115
+      Enabled: true
+      Line Style:
+        Line Width: 0.029999999329447746
+        Value: Lines
+      Name: Base grid
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 16
+      Reference Frame: piper_base_link
+      Value: true
+    - Alpha: 1
+      Class: rviz_default_plugins/RobotModel
+      Collision Enabled: false
+      Description File: ""
+      Description Source: Topic
+      Description Topic:
+        Depth: 1
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /visual_grasp/robot_description
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+      Mass Properties:
+        Inertia: false
+        Mass: false
+      Name: PiPER-H
+      TF Prefix: model_
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Class: rviz_default_plugins/PointCloud2
+      Color Transformer: RGB8
+      Decay Time: 0
+      Enabled: true
+      Name: D435 colored cloud
+      Position Transformer: XYZ
+      Queue Size: 5
+      Selectable: true
+      Size (Pixels): 2
+      Size (m): 0.003
+      Style: Points
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /camera/camera/depth/color/points
+      Use Fixed Frame: true
+      Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Marker Topic:
+        Depth: 10
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /visual_grasp/block_markers
+      Name: Detected cubes
+      Namespaces:
+        detected_cubes: true
+      Queue Size: 10
+      Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Marker Topic:
+        Depth: 10
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /visual_grasp/pick_markers
+      Name: Pick plan
+      Namespaces:
+        pick_sequence: true
+      Queue Size: 10
+      Value: true
+    - Alpha: 1
+      Axes Length: 0.06
+      Axes Radius: 0.006
+      Class: rviz_default_plugins/PoseArray
+      Color: 255; 220; 0
+      Enabled: true
+      Head Length: 0.02
+      Head Radius: 0.01
+      Name: Pick TCP poses
+      Queue Size: 10
+      Shaft Length: 0.06
+      Shaft Radius: 0.004
+      Shape: Axes
+      Topic:
+        Depth: 10
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /visual_grasp/pick_sequence
+      Value: true
+    - Alpha: 1
+      Axes Length: 0.08
+      Axes Radius: 0.008
+      Class: rviz_default_plugins/Pose
+      Color: 255; 85; 255
+      Enabled: true
+      Head Length: 0.03
+      Head Radius: 0.012
+      Name: Commanded flange
+      Queue Size: 10
+      Shaft Length: 0.08
+      Shaft Radius: 0.006
+      Shape: Axes
+      Topic:
+        Depth: 10
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /visual_grasp/commanded_flange_pose
+      Value: true
+    - Class: rviz_default_plugins/Axes
+      Enabled: true
+      Length: 0.10
+      Name: TCP frame
+      Radius: 0.008
+      Reference Frame: piper_tcp_link
+      Value: true
+    - Class: rviz_default_plugins/TF
+      Enabled: false
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+      Marker Scale: 0.12
+      Name: TF tree
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree: {}
+      Update Interval: 0
+      Value: false
+    - Class: rviz_default_plugins/Image
+      Enabled: true
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: Detection image
+      Normalize Range: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /visual_grasp/debug_image
+      Value: true
+  Enabled: true
+  Global Options:
+    Background Color: 32; 34; 38
+    Fixed Frame: piper_base_link
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz_default_plugins/Interact
+      Hide Inactive Objects: true
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/FocusCamera
+    - Class: rviz_default_plugins/Measure
+      Line color: 128; 128; 0
+    - Class: rviz_default_plugins/PublishPoint
+      Single click: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /clicked_point
+  Transformation:
+    Current:
+      Class: rviz_default_plugins/TF
+  Value: true
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 1.15
+      Enable Stereo Rendering:
+        Stereo Eye Separation: 0.05999999865889549
+        Stereo Focal Distance: 1
+        Swap Stereo Eyes: false
+        Value: false
+      Focal Point:
+        X: 0.28
+        Y: 0
+        Z: 0.20
+      Focal Shape Fixed Size: true
+      Focal Shape Size: 0.05
+      Invert Z Axis: false
+      Name: Current View
+      Near Clip Distance: 0.01
+      Pitch: 0.48
+      Target Frame: piper_base_link
+      Value: Orbit (rviz)
+      Yaw: 0.72
+    Saved: ~
+Window Geometry:
+  Displays:
+    collapsed: false
+  Height: 900
+  Hide Left Dock: false
+  Hide Right Dock: false
+  QMainWindow State: 000000ff00000000fd00000004000000000000016f0000032afc0200000008fb000000100044006900730070006c006100790073010000003d000002fe000000c900fffffffb0000001200530065006c0065006300740069006f006e0100000341000000c6000000c900fffffffb0000000a00560069006500770073010000040d0000011e000000a400fffffffb0000000800540069006d00650100000531000000ab0000007600ffffff000000010000010f0000032afc0200000001fb0000001e0044006500740065006300740069006f006e00200069006d00610067006501000000000000032a0000004900ffffff00000003000005a00000003efc0100000001fb0000000800540069006d00650000000000000005a0000002ef00ffffff0000042b0000032a00000004000000040000000800000008fc00000000
+  Selection:
+    collapsed: false
+  Time:
+    collapsed: false
+  Views:
+    collapsed: false
+  Width: 1440
+  X: 100
+  Y: 60

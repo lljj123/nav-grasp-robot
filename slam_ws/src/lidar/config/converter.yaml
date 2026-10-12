@@ -1,0 +1,24 @@
+pointcloud_to_laserscan:
+  ros__parameters:
+    target_frame: base_link
+    transform_tolerance: 0.05
+
+    # The MID-360 origin is 0.10 m above base_link by default. Keep a broad
+    # horizontal slab while rejecting the floor below the chassis.
+    min_height: -0.05
+    max_height: 0.50
+
+    # The MID-360 is mounted ahead of the chassis with its +X axis pointing
+    # forward.  The rear half of its field of view sees the vehicle body, so
+    # expose only the front 180 degrees to SLAM, AMCL, and Nav2 via /scan.
+    # Keep /livox/lidar unchanged for diagnostics and other 3D consumers.
+    angle_min: -1.57079633
+    angle_max: 1.57079633
+    angle_increment: 0.004363323  # 0.25 degree, 720 front-facing rays
+    scan_time: 0.10
+
+    range_min: 0.45
+    range_max: 30.0
+    use_inf: true
+    inf_epsilon: 1.0
+    concurrency_level: 1

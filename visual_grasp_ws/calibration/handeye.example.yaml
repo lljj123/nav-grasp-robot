@@ -1,0 +1,6 @@
+handeye:
+  valid: false
+  reason: run /handeye/solve after collecting at least 15 diverse samples
+  parent_frame: piper_link6
+  child_frame: camera_link
+

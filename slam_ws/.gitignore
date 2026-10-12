@@ -1,0 +1,7 @@
+/build/
+/install/
+/log/
+/maps/*.pgm
+/maps/*.yaml
+/maps/*.posegraph
+/maps/*.data

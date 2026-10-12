@@ -1,0 +1,24 @@
+handeye_calibrator:
+  ros__parameters:
+    image_topic: /camera/camera/color/image_raw
+    camera_info_topic: /camera/camera/color/camera_info
+    base_frame: piper_base_link
+    flange_frame: piper_link6
+    camera_link_frame: camera_link
+    camera_optical_frame: camera_color_optical_frame
+    tag_id: 3
+    # OpenCV detects the boundary of the inner AprilTag coding square.
+    # The 53 mm outer frame in this printed target is not part of tag36h11.
+    tag_size_m: 0.035
+    min_samples: 15
+    max_detection_age_s: 1.0
+    max_reprojection_error_px: 2.0
+    # A sample is accepted only if the flange stays within these limits for 1 s.
+    stability_duration_s: 1.0
+    stability_translation_m: 0.001
+    stability_rotation_deg: 0.5
+    max_flange_pose_age_s: 0.5
+    # Launch files override these portable per-user defaults when
+    # calibration_dir is supplied.
+    dataset_path: ~/.config/nav_grasp/calibration/handeye_samples.yaml
+    result_path: ~/.config/nav_grasp/calibration/handeye.yaml
