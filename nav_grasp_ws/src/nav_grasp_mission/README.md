@@ -81,11 +81,10 @@ target_pose_xyyaw: [目标点地图坐标x, 目标点地图坐标y, 朝向yaw弧
   --mission-config /absolute/path/to/mission.local.yaml
 ```
 
-启动器会检查地图、目标点和 CAN，自动打开并依次等待底盘/雷达、D435、
+启动器读取地图和目标点、配置 CAN，自动打开并依次等待底盘/雷达、D435、
 Nav2/RViz、机械臂（使用现有 `start_arm_control.sh --replace`）、视觉抓取和任务
-状态机。启动过程中会显示底盘 CAN、里程计速度、机械臂启动参数、控制模式、
-故障码和夹爪状态。所有组件就绪后，只需在 RViz 使用 **2D Pose Estimate** 完成
-定位和检查；回到启动器终端按一次回车后，状态机才会开始导航—抓取—返航。
+状态机。所有组件就绪后，在 RViz 使用 **2D Pose Estimate** 完成定位并确认现场
+安全；回到启动器终端按一次回车后，状态机才会开始导航—抓取—返航。
 
 如果启动前检测到上一次遗留的同项目组件，启动器会先取消旧任务、停止底盘，
 必要时调用机械臂软件急停，然后只清理本项目的导航、相机、视觉抓取和状态机
@@ -94,13 +93,7 @@ Nav2/RViz、机械臂（使用现有 `start_arm_control.sh --replace`）、视�
 主控终端会持续显示任务状态。任务结束后按回车，或随时在主控终端按 `Ctrl-C`，
 它都会关闭本次启动的全部进程和终端。运行中退出会先取消任务、发送底盘零速度；
 若检测到机械臂仍在执行抓取动作，还会先调用软件急停。实体危险仍须优先使用实体
-急停。可用下面的命令只做静态检查，不启动任何设备：
-
-```bash
-./nav_grasp_ws/start_full_mission.sh --check \
-  --map /absolute/path/to/map.yaml \
-  --mission-config /absolute/path/to/mission.local.yaml
-```
+急停。
 
 以下是需要单独调试组件时的手动启动方式。
 

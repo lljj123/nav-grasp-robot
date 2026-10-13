@@ -20,7 +20,7 @@ from launch.substitutions import LaunchConfiguration
 
 def generate_launch_description():
     tracer_share = get_package_share_directory('tracer_base')
-    converter_share = get_package_share_directory('lidar')
+    converter_share = get_package_share_directory('lidar_bringup')
 
     port_name = LaunchConfiguration('port_name')
 

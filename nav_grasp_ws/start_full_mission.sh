@@ -3,7 +3,7 @@ set -eo pipefail
 
 workspace_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 launcher="$workspace_root/src/nav_grasp_mission/scripts/start_full_mission.sh"
-required_version='LAUNCHER_VERSION="2026-10-12-portable-v4"'
+required_version='LAUNCHER_VERSION="2026-10-13-portable-v5"'
 
 if [[ ! -x "$launcher" ]]; then
     echo "错误：受管启动器不存在或不可执行：$launcher" >&2

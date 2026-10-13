@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="3">
-  <name>lidar</name>
+  <name>lidar_bringup</name>
   <version>0.1.0</version>
   <description>Configurable PointCloud2 to LaserScan bringup with a Livox default profile.</description>
   <maintainer email="nav-grasp@users.noreply.github.com">Nav-Grasp Maintainers</maintainer>

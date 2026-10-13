@@ -10,7 +10,7 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
-    package_share = get_package_share_directory('lidar')
+    package_share = get_package_share_directory('lidar_bringup')
     params_file = LaunchConfiguration('params_file')
     start_lidar = LaunchConfiguration('start_lidar')
     publish_lidar_tf = LaunchConfiguration('publish_lidar_tf')

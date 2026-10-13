@@ -3,7 +3,7 @@
 
 set -Eeuo pipefail
 
-LAUNCHER_VERSION="2026-10-12-portable-v4"
+LAUNCHER_VERSION="2026-10-13-portable-v5"
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 NAV_GRASP_ROOT="$(cd -- "$script_dir/../../../.." && pwd)"
 source "$NAV_GRASP_ROOT/scripts/project_env.bash"
@@ -11,10 +11,8 @@ NAV_WS="$SLAM_WS"
 
 BASE_LIDAR_LAUNCH="${BASE_LIDAR_LAUNCH:-$NAV_WS/scripts/base_lidar.launch.py}"
 MISSION_CONFIG="${NAV_GRASP_MISSION_CONFIG:-$MISSION_WS/src/nav_grasp_mission/config/mission.yaml}"
-STATUS_SCRIPT="$MISSION_WS/src/nav_grasp_mission/scripts/system_status.py"
 DEFAULT_MAP="${NAV_GRASP_MAP:-$NAV_WS/maps/map.yaml}"
 MAP_FILE="$DEFAULT_MAP"
-CHECK_ONLY=false
 DOMAIN_ID="${ROS_DOMAIN_ID:-0}"
 LOCK_FILE="/tmp/nav_grasp_full_mission_${DOMAIN_ID}.lock"
 
@@ -29,11 +27,10 @@ die() { printf '%b[ERROR]%b %s\n' "$red" "$reset" "$*" >&2; exit 1; }
 
 usage() {
     printf '%s\n' \
-        "用法：$0 [--map /absolute/path/map.yaml] [--mission-config /absolute/path/mission.yaml] [--check]" \
+        "用法：$0 [--map /absolute/path/map.yaml] [--mission-config /absolute/path/mission.yaml]" \
         '' \
         "  --map             地图 YAML，默认读取 NAV_GRASP_MAP 或 $DEFAULT_MAP" \
-        "  --mission-config  任务参数，默认读取 NAV_GRASP_MISSION_CONFIG" \
-        '  --check  只检查文件和配置，不启动或关闭任何设备和节点'
+        "  --mission-config  任务参数，默认读取 NAV_GRASP_MISSION_CONFIG"
 }
 
 while (($# > 0)); do
@@ -47,10 +44,6 @@ while (($# > 0)); do
             (($# >= 2)) || die '--mission-config 后缺少参数文件路径'
             MISSION_CONFIG="$2"
             shift 2
-            ;;
-        --check)
-            CHECK_ONLY=true
-            shift
             ;;
         -h|--help)
             usage
@@ -78,7 +71,6 @@ require_file "$NAV_WS/setup.bash"
 require_file "$VISUAL_WS/install/setup.bash"
 require_file "$MISSION_WS/install/setup.bash"
 require_file "$MISSION_CONFIG"
-require_file "$STATUS_SCRIPT"
 require_executable "$VISUAL_WS/start_arm_control.sh"
 require_executable "$VISUAL_WS/start_perception.sh"
 require_executable "${ARM_CONTROL_SCRIPT:-}"
@@ -118,11 +110,6 @@ PY
 info "启动器版本：$LAUNCHER_VERSION"
 info "地图：$MAP_FILE"
 info "抓取停车位：$target_summary"
-
-if [[ "$CHECK_ONLY" == true ]]; then
-    info '静态检查通过；--check 模式未启动或关闭任何设备和节点'
-    exit 0
-fi
 
 [[ -n "${DISPLAY:-}" || -n "${WAYLAND_DISPLAY:-}" ]] || \
     die '当前没有图形桌面，无法打开 RViz 和组件终端'
@@ -498,27 +485,6 @@ localization_ready() {
     grep -q 'Translation:' <<<"$output"
 }
 
-show_hardware_status() {
-    printf '\n%b========== 底盘与机械臂状态 ==========%b\n' \
-        "$green" "$reset"
-    printf '%s\n' 'CAN 接口：'
-    ip -brief link show can1 || true
-    ip -brief link show can0 || true
-    printf '%s\n' '机械臂启动参数：'
-    timeout 5 ros2 param get \
-        /arm/agx_arm_ctrl_single_node tcp_offset || return 1
-    timeout 5 ros2 param get \
-        /arm/agx_arm_ctrl_single_node speed_percent || return 1
-    timeout 5 ros2 param get \
-        /arm/agx_arm_ctrl_single_node effector_type || return 1
-    printf '%s\n' '实时反馈：'
-    python3 "$STATUS_SCRIPT" --timeout 5.0
-    local status=$?
-    printf '%b========================================%b\n\n' \
-        "$green" "$reset"
-    return "$status"
-}
-
 printf -v map_arg '%q' "$MAP_FILE"
 printf -v mission_config_arg '%q' "$MISSION_CONFIG"
 
@@ -541,8 +507,6 @@ open_terminal arm '4-机械臂驱动' \
 wait_until '机械臂反馈' 60 \
     topic_set_contains /arm/feedback/arm_status \
     /arm/feedback/joint_states /arm/feedback/gripper_status
-show_hardware_status || \
-    die '底盘或机械臂状态检查未通过；禁止启动视觉控制和任务'
 
 open_terminal perception '5-视觉抓取' \
     "exec '$VISUAL_WS/start_perception.sh' allow_robot_commands:=true"
