@@ -1,0 +1,24 @@
+pick_place_mission:
+  ros__parameters:
+    use_sim_time: true
+    map_frame: map
+    robot_base_frame: base_link
+    odom_topic: /wheel/odom
+    cmd_vel_topic: /cmd_vel
+    nav_action_name: /navigate_to_pose
+    pick_action_name: /manipulation/pick
+    place_action_name: /manipulation/place
+    pick_pose: [3.959940, -3.339127, 0.0, 0.0, 0.0, -0.775121239, 0.631812524]
+    # 调整后的放置导航点：map 中 x=-3.97 m、y=3.41 m、yaw=82°。
+    # 抓放包在扩大后的箱口靠近机器人一侧使用固定高位投放点。
+    place_pose: [-3.97, 3.41, 0.0, 0.0, 0.0, 0.656059029, 0.754709580]
+    object_colors: [red, green]
+    base_settle_time_sec: 1.5
+    max_base_linear_speed_mps: 0.02
+    max_base_angular_speed_rps: 0.03
+    navigation_timeout_sec: 240.0
+    manipulation_timeout_sec: 120.0
+    dependency_timeout_sec: 60.0
+    base_settle_timeout_sec: 20.0
+    odom_stale_timeout_sec: 1.0
+    auto_start: false

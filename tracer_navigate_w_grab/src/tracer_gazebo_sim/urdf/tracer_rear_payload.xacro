@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<!-- TRACER 后置工控机。 -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="tracer_rear_payload">
+  <material name="industrial_pc_body">
+    <color rgba="0.18 0.20 0.22 1"/>
+  </material>
+  <material name="industrial_pc_panel">
+    <color rgba="0.055 0.060 0.065 1"/>
+  </material>
+  <material name="industrial_pc_metal">
+    <color rgba="0.48 0.50 0.52 1"/>
+  </material>
+  <material name="industrial_pc_led_green">
+    <color rgba="0.02 0.90 0.18 1"/>
+  </material>
+
+  <xacro:macro name="tracer_rear_payload" params="parent">
+    <!--
+      TRACER 前进方向为 +X，因此 -X 是车尾。
+      工控机中心相对 base_link 位于 (-0.195, 0, 0.145) m。
+    -->
+    <link name="industrial_pc_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="3.50"/>
+        <inertia
+          ixx="0.035583" ixy="0" ixz="0"
+          iyy="0.021146" iyz="0" izz="0.045296"/>
+      </inertial>
+
+      <visual name="industrial_pc_case">
+        <geometry><box size="0.23 0.32 0.14"/></geometry>
+        <material name="industrial_pc_body"/>
+      </visual>
+      <collision name="industrial_pc_collision">
+        <geometry><box size="0.23 0.32 0.14"/></geometry>
+      </collision>
+
+      <!-- 车尾方向的黑色接口面板。 -->
+      <visual name="industrial_pc_rear_panel">
+        <origin xyz="-0.1165 0 0" rpy="0 0 0"/>
+        <geometry><box size="0.003 0.292 0.116"/></geometry>
+        <material name="industrial_pc_panel"/>
+      </visual>
+
+      <!-- 简化的散热栅格。 -->
+      <visual name="vent_1">
+        <origin xyz="-0.1182 0.105 0.015" rpy="0 0 0"/>
+        <geometry><box size="0.001 0.012 0.065"/></geometry>
+        <material name="industrial_pc_metal"/>
+      </visual>
+      <visual name="vent_2">
+        <origin xyz="-0.1182 0.082 0.015" rpy="0 0 0"/>
+        <geometry><box size="0.001 0.012 0.065"/></geometry>
+        <material name="industrial_pc_metal"/>
+      </visual>
+      <visual name="vent_3">
+        <origin xyz="-0.1182 0.059 0.015" rpy="0 0 0"/>
+        <geometry><box size="0.001 0.012 0.065"/></geometry>
+        <material name="industrial_pc_metal"/>
+      </visual>
+      <visual name="vent_4">
+        <origin xyz="-0.1182 0.036 0.015" rpy="0 0 0"/>
+        <geometry><box size="0.001 0.012 0.065"/></geometry>
+        <material name="industrial_pc_metal"/>
+      </visual>
+
+      <!-- 电源状态灯和两个简化接口。 -->
+      <visual name="power_led">
+        <origin xyz="-0.119 0.118 -0.042" rpy="0 1.57079632679 0"/>
+        <geometry><cylinder radius="0.004" length="0.002"/></geometry>
+        <material name="industrial_pc_led_green"/>
+      </visual>
+      <visual name="interface_1">
+        <origin xyz="-0.1185 -0.035 -0.020" rpy="0 0 0"/>
+        <geometry><box size="0.002 0.050 0.022"/></geometry>
+        <material name="industrial_pc_metal"/>
+      </visual>
+      <visual name="interface_2">
+        <origin xyz="-0.1185 -0.095 -0.020" rpy="0 0 0"/>
+        <geometry><box size="0.002 0.040 0.022"/></geometry>
+        <material name="industrial_pc_metal"/>
+      </visual>
+    </link>
+
+    <joint name="industrial_pc_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="industrial_pc_link"/>
+      <origin xyz="-0.195 0 0.145" rpy="0 0 0"/>
+    </joint>
+
+    <gazebo reference="industrial_pc_link">
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+    </gazebo>
+  </xacro:macro>
+</robot>

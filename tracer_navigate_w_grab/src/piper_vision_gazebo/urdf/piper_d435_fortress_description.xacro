@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<!-- Piper 末端 RealSense D435：官方外形/TF + Gazebo Fortress RGB-D 传感器。 -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="piper_d435_fortress">
+  <xacro:include filename="$(find realsense2_description)/urdf/_d435.urdf.xacro"/>
+
+  <xacro:macro name="piper_wrist_d435" params="parent:=gripper_base name:=wrist_camera">
+    <!-- Gazebo Fortress 中稳定显示的 D435 外观材质。 -->
+    <material name="${name}_front_black">
+      <color rgba="0.018 0.022 0.028 1"/>
+    </material>
+    <material name="${name}_lens_ring">
+      <color rgba="0.055 0.060 0.068 1"/>
+    </material>
+    <material name="${name}_lens_glass">
+      <color rgba="0.010 0.055 0.090 1"/>
+    </material>
+    <material name="${name}_projector_glass">
+      <color rgba="0.075 0.025 0.090 1"/>
+    </material>
+    <material name="${name}_status_blue">
+      <color rgba="0.000 0.310 0.650 1"/>
+    </material>
+
+    <!-- 安装到夹爪 -X 侧的支架，使相机避开手指。 -->
+    <link name="${name}_mount_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="0.020"/>
+        <inertia
+          ixx="1.875e-06" ixy="0" ixz="0"
+          iyy="3.042e-06" iyz="0" izz="4.167e-06"/>
+      </inertial>
+      <visual>
+        <geometry><box size="0.040 0.030 0.015"/></geometry>
+        <material name="wrist_camera_mount_black">
+          <color rgba="0.08 0.08 0.09 1"/>
+        </material>
+      </visual>
+      <collision>
+        <geometry><box size="0.040 0.030 0.015"/></geometry>
+      </collision>
+    </link>
+
+    <joint name="${name}_mount_joint" type="fixed">
+      <origin xyz="-0.060 0 0.055" rpy="0 0 0"/>
+      <parent link="${parent}"/>
+      <child link="${name}_mount_link"/>
+    </joint>
+
+    <!--
+      D435 局部 +X 为观察方向。这里把安装位置和机身朝向同时镜像到夹爪
+      -X 侧，但仍让光轴与夹爪局部 +Z 一致。机械臂执行俯视抓取姿态时，
+      相机随末端朝向桌面。
+
+      use_mesh=false 可避免 d435.dae 材质在部分 Gazebo Fortress / Ogre2
+      环境中退化为纯白色；realsense2_description 会改用其银灰色标准机身。
+    -->
+    <!-- <xacro:sensor_d435
+      parent="${name}_mount_link"
+      name="${name}"
+      use_nominal_extrinsics="true"
+      add_plug="false"
+      use_mesh="false">
+      <origin xyz="-0.020 0 0" rpy="3.14159265359 -1.57079632679 0"/>
+    </xacro:sensor_d435> -->
+
+<xacro:sensor_d435
+  parent="${name}_mount_link"
+  name="${name}"
+  use_nominal_extrinsics="true"
+  add_plug="false"
+  use_mesh="false">
+  <origin
+    xyz="-0.020 0 0"
+    rpy="0 -1.57079632679 0"/>
+</xacro:sensor_d435>
+
+
+    <!--
+      官方无网格模式提供准确尺寸的银灰色机身。以下薄型外观层安装在相机
+      正面，用黑色面板和四个光学窗口还原 D435 的典型外观；它不参与碰撞。
+    -->
+    <link name="${name}_appearance_link">
+      <visual name="front_panel">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry><box size="0.0014 0.084 0.021"/></geometry>
+        <material name="${name}_front_black"/>
+      </visual>
+
+      <visual name="left_ir_ring">
+        <origin xyz="0.0010 0.028 0" rpy="0 1.57079632679 0"/>
+        <geometry><cylinder radius="0.0053" length="0.0014"/></geometry>
+        <material name="${name}_lens_ring"/>
+      </visual>
+      <visual name="left_ir_lens">
+        <origin xyz="0.0018 0.028 0" rpy="0 1.57079632679 0"/>
+        <geometry><cylinder radius="0.0037" length="0.0008"/></geometry>
+        <material name="${name}_lens_glass"/>
+      </visual>
+
+      <visual name="infrared_projector_ring">
+        <origin xyz="0.0010 0.009 0" rpy="0 1.57079632679 0"/>
+        <geometry><cylinder radius="0.0047" length="0.0014"/></geometry>
+        <material name="${name}_lens_ring"/>
+      </visual>
+      <visual name="infrared_projector_glass">
+        <origin xyz="0.0018 0.009 0" rpy="0 1.57079632679 0"/>
+        <geometry><cylinder radius="0.0032" length="0.0008"/></geometry>
+        <material name="${name}_projector_glass"/>
+      </visual>
+
+      <visual name="color_ring">
+        <origin xyz="0.0010 -0.010 0" rpy="0 1.57079632679 0"/>
+        <geometry><cylinder radius="0.0050" length="0.0014"/></geometry>
+        <material name="${name}_lens_ring"/>
+      </visual>
+      <visual name="color_lens">
+        <origin xyz="0.0018 -0.010 0" rpy="0 1.57079632679 0"/>
+        <geometry><cylinder radius="0.0035" length="0.0008"/></geometry>
+        <material name="${name}_lens_glass"/>
+      </visual>
+
+      <visual name="right_ir_ring">
+        <origin xyz="0.0010 -0.029 0" rpy="0 1.57079632679 0"/>
+        <geometry><cylinder radius="0.0053" length="0.0014"/></geometry>
+        <material name="${name}_lens_ring"/>
+      </visual>
+      <visual name="right_ir_lens">
+        <origin xyz="0.0018 -0.029 0" rpy="0 1.57079632679 0"/>
+        <geometry><cylinder radius="0.0037" length="0.0008"/></geometry>
+        <material name="${name}_lens_glass"/>
+      </visual>
+
+      <visual name="status_indicator">
+        <origin xyz="0.0012 -0.039 0.0075" rpy="0 0 0"/>
+        <geometry><box size="0.0008 0.0022 0.0022"/></geometry>
+        <material name="${name}_status_blue"/>
+      </visual>
+    </link>
+
+    <joint name="${name}_appearance_joint" type="fixed">
+      <!-- D435 机身前表面位于 camera_link 的局部 +X 方向。 -->
+      <origin xyz="0.0128 -0.0175 0" rpy="0 0 0"/>
+      <parent link="${name}_link"/>
+      <child link="${name}_appearance_link"/>
+    </joint>
+
+    <!--
+      realsense2_description 只提供几何与 TF。这里补充 Gazebo Fortress
+      RGB-D 传感器；深度图与彩色图按同一光学坐标系对齐。
+    -->
+    <gazebo reference="${name}_link">
+      <sensor name="${name}_rgbd" type="rgbd_camera">
+        <pose>0 0.015 0 0 0 0</pose>
+        <always_on>true</always_on>
+        <update_rate>30</update_rate>
+        <visualize>true</visualize>
+        <topic>/${name}</topic>
+        <gz_frame_id>${name}_color_optical_frame</gz_frame_id>
+        <camera>
+          <!-- D435 深度相机约 87° 水平视场角。 -->
+          <horizontal_fov>1.518436449</horizontal_fov>
+          <image>
+            <width>640</width>
+            <height>480</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.10</near>
+            <far>3.0</far>
+          </clip>
+          <camera_info_topic>/${name}/camera_info</camera_info_topic>
+        </camera>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+</robot>

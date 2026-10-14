@@ -1,0 +1,34 @@
+trajectory_execution:
+  allowed_execution_duration_scaling: 1.30
+  allowed_goal_duration_margin: 0.75
+  # Gazebo joint-state feedback can move by slightly more than 0.02 rad
+  # between planning and execution validation. Keep this strict enough to
+  # reject stale trajectories while avoiding false aborts after cube lifting.
+  allowed_start_tolerance: 0.05
+
+moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControllerManager
+
+moveit_simple_controller_manager:
+  controller_names:
+    - piper_arm_controller
+    - piper_gripper_controller
+
+  piper_arm_controller:
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: true
+    joints:
+      - piper_joint1
+      - piper_joint2
+      - piper_joint3
+      - piper_joint4
+      - piper_joint5
+      - piper_joint6
+
+  piper_gripper_controller:
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: true
+    joints:
+      - piper_gripper_joint1
+      - piper_gripper_joint2
