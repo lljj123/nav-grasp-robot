@@ -1,0 +1,20 @@
+# colcon output
+/build/
+/install/
+/log/
+
+# Python cache and test artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+
+# IDE and operating-system files
+.vscode/
+.idea/
+*~
+.DS_Store
+
+# Runtime logs
+*.log
+*.pid

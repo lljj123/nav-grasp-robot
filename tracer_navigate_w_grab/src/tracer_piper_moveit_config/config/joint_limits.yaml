@@ -1,0 +1,42 @@
+# Conservative UI defaults; URDF position limits remain authoritative.
+joint_limits:
+  piper_joint1:
+    has_velocity_limits: true
+    max_velocity: 1.20
+    has_acceleration_limits: true
+    max_acceleration: 2.00
+  piper_joint2:
+    has_velocity_limits: true
+    max_velocity: 1.20
+    has_acceleration_limits: true
+    max_acceleration: 2.00
+  piper_joint3:
+    has_velocity_limits: true
+    max_velocity: 1.20
+    has_acceleration_limits: true
+    max_acceleration: 2.00
+  piper_joint4:
+    has_velocity_limits: true
+    max_velocity: 1.50
+    has_acceleration_limits: true
+    max_acceleration: 2.50
+  piper_joint5:
+    has_velocity_limits: true
+    max_velocity: 1.50
+    has_acceleration_limits: true
+    max_acceleration: 2.50
+  piper_joint6:
+    has_velocity_limits: true
+    max_velocity: 1.50
+    has_acceleration_limits: true
+    max_acceleration: 2.50
+  piper_gripper_joint1:
+    has_velocity_limits: true
+    max_velocity: 0.10
+    has_acceleration_limits: true
+    max_acceleration: 0.50
+  piper_gripper_joint2:
+    has_velocity_limits: true
+    max_velocity: 0.10
+    has_acceleration_limits: true
+    max_acceleration: 0.50

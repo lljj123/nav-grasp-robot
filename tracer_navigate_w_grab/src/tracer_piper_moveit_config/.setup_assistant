@@ -1,0 +1,10 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: tracer_gazebo_sim
+    relative_path: urdf/tracer_piper.urdf.xacro
+  srdf:
+    relative_path: config/tracer_piper.srdf
+  config:
+    author_name: TRACER Piper Developer
+    author_email: maintainer@example.com
+    generated_timestamp: 1788566400

@@ -1,0 +1,11 @@
+# Goal
+bool return_home
+---
+# Result
+bool success
+uint8 error_code
+string message
+---
+# Feedback
+string stage
+float32 progress

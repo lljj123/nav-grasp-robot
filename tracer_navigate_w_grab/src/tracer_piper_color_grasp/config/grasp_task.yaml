@@ -1,0 +1,97 @@
+/**:
+  ros__parameters:
+    use_sim_time: true
+
+    # 现有腕部 D435 原始话题。UI 的 180° 旋转只作用于显示副本。
+    camera_image_topic: /wrist_camera/image
+    camera_depth_topic: /wrist_camera/depth_image
+    camera_info_topic: /wrist_camera/camera_info
+    camera_optical_frame: wrist_camera_color_optical_frame
+    debug_image_topic: /color_grasp/debug_image
+    target_pose_topic: /color_grasp/target_pose
+    pose_reference_frame: piper_base_link
+    base_odom_topic: /wheel/odom
+    safety.max_base_linear_speed_mps: 0.02
+    safety.max_base_angular_speed_rps: 0.03
+    safety.clock_check_wall_seconds: 0.30
+    # 独立 Gazebo/RViz 示例不启动操作台，因此默认解除软件急停。
+    # 运行中仍可向 /emergency_stop 发布 true 立即停止任务。
+    safety.start_with_emergency_stop: false
+
+    # OpenCV HSV: [Hmin, Smin, Vmin, Hmax, Smax, Vmax]。
+    # 红色跨越 Hue=0，因此使用两段阈值。
+    vision.red_hsv_low: [0, 100, 70, 10, 255, 255]
+    vision.red_hsv_high: [170, 100, 70, 179, 255, 255]
+    vision.yellow_hsv: [18, 90, 70, 40, 255, 255]
+    vision.green_hsv: [40, 65, 45, 95, 255, 255]
+    vision.min_contour_area: 250.0
+    vision.max_contour_area: 120000.0
+    vision.min_rectangularity: 0.55
+    vision.min_aspect_ratio: 0.50
+    vision.max_aspect_ratio: 2.00
+    vision.morphology_kernel: 5
+    vision.min_depth_m: 0.10
+    vision.max_depth_m: 1.20
+    vision.min_depth_samples: 25
+    vision.sync_tolerance_s: 0.15
+    vision.tf_timeout_s: 0.30
+    vision.detection_timeout_s: 4.0
+    vision.stable_frames: 4
+    vision.stability_tolerance_m: 0.012
+
+    # 当前 Gazebo 三个方块相对 Piper 基座的大致允许区域。
+    workspace.min_x_m: 0.20
+    workspace.max_x_m: 0.65
+    workspace.min_y_m: -0.30
+    workspace.max_y_m: 0.30
+    workspace.min_z_m: -0.30
+    # Allow the observed RGB-D height variation (0.103 m TCP at the pick point).
+    workspace.max_z_m: 0.12
+
+    planning_group: piper_arm
+    end_effector_link: piper_gripper_base
+    gripper_action_name: /piper_gripper_controller/follow_joint_trajectory
+    motion.server_timeout_s: 10.0
+    motion.planning_time_s: 8.0
+    motion.planning_attempts: 8
+    motion.velocity_scaling: 0.15
+    motion.acceleration_scaling: 0.10
+    motion.cartesian_step_m: 0.005
+    motion.cartesian_min_fraction: 0.95
+    motion.gripper_motion_s: 4.0
+    motion.gripper_timeout_s: 15.0
+
+    # 5 cm 方块；piper_gripper_base 到两指抓取中心的初始估计为 0.138 m。
+    # 首次运行时应通过 RViz 预览和慢速单步试验精调该偏置。
+    grasp.cube_size_m: 0.05
+    grasp.tcp_to_grasp_center_m: 0.138
+    grasp.pregrasp_height_m: 0.12
+    grasp.lift_height_m: 0.12
+    grasp.gripper_open_mm: 90.0
+    grasp.gripper_close_mm: 46.0
+
+    # 与 tracer_gazebo_sim/config/piper_initial_positions.yaml 保持一致，单位 rad。
+    home_joint_values: [0.072925, 0.806721, -0.927252, -0.004518, 1.150000, -0.026715]
+
+    # 当前复用机械臂初始姿态作为安全携物姿态。抓取成功后
+    # 保持夹爪闭合，不再旋转到车载托盘。
+    carry_joint_values: [0.072925, 0.806721, -0.927252, -0.004518, 1.150000, -0.026715]
+
+    # 储物箱的 SDF 模型原点就是几何中心，固定在 map=(-4.0, 4.0)。
+    # PLACE 执行时读取当时真实的 map -> piper_base_link TF，不再根据
+    # mission_params.yaml 里的理想放置导航点预先写死 X/Y。
+    place.basket_frame: map
+    place.basket_center_x_m: -4.0
+    place.basket_center_y_m: 4.0
+    # 两指中心在 piper_base_link 下的释放高度；较上一版提高 0.20 m。
+    place.finger_center_z_m: 0.325
+    place.tf_timeout_s: 1.0
+    # 保留已验证的夹爪姿态，格式 [qx, qy, qz, qw]。
+    place.release_orientation_xyzw: [-0.0508278333, 0.7529963848, 0.0236494598, 0.6556322741]
+
+
+    grasp:
+      # 观测姿态下夹爪中心相对相机测得方块中心存在约 7 cm 的 X 偏差。
+      offset_x_m: -0.07
+      offset_y_m: 0.0
+      offset_z_m: -0.03

@@ -1,0 +1,10 @@
+initial_positions:
+  # 机械臂收拢并让腕部 D435 大体朝向地面，适合作为移动时的初始姿态。
+  piper_joint1: 0.072925
+  piper_joint2: 0.806721
+  piper_joint3: -0.927252
+  piper_joint4: -0.004518
+  piper_joint5: 1.150000
+  piper_joint6: -0.026715
+  piper_gripper_joint1: 0.04
+  piper_gripper_joint2: -0.04
