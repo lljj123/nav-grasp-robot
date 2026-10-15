@@ -4,7 +4,8 @@
 
 Nav-Grasp Robot 是面向 ROS 2 Humble 的移动操作机器人项目，将二维
 SLAM、Nav2 导航、RGB-D 视觉抓取和导航—抓取—返航状态机集成在同一
-仓库中。
+仓库中。代码按运行环境分为 `nav_grasp_real/` 实机程序和
+`nav_grasp_sim/` 仿真程序。
 
 ```text
 PointCloud2 + odom -> /scan -> SLAM Toolbox -> map
@@ -16,24 +17,41 @@ RGB + aligned depth -> cube detector -> grasp planner -> arm executor
                          mission FSM -> return to start
 ```
 
-四份主文档：
+主要文档：
 
 | 文档 | 内容 |
 | --- | --- |
 | [`README.md`](README.md) | 总项目安装、运行顺序和一键启动 |
-| [`slam_ws/README.md`](slam_ws/README.md) | SLAM 建图与 Nav2 导航 |
-| [`visual_grasp_ws/README.md`](visual_grasp_ws/README.md) | 手眼标定、方块检测和实机抓取 |
-| [`nav_grasp_ws/README.md`](nav_grasp_ws/README.md) | 导航—抓取—返航状态机 |
+| [`nav_grasp_real/README.md`](nav_grasp_real/README.md) | 实机目录结构和工作区入口 |
+| [`nav_grasp_sim/README.md`](nav_grasp_sim/README.md) | TRACER + Piper 仿真、导航和抓放 |
+| [`nav_grasp_real/src/slam/README.md`](nav_grasp_real/src/slam/README.md) | SLAM 建图与 Nav2 导航 |
+| [`nav_grasp_real/src/visual_grasp/README.md`](nav_grasp_real/src/visual_grasp/README.md) | 手眼标定、方块检测和实机抓取 |
+| [`nav_grasp_real/src/nav_grasp/README.md`](nav_grasp_real/src/nav_grasp/README.md) | 导航—抓取—返航状态机 |
 
-仓库主要工作区：
+仓库目录结构：
+
+```text
+nav-grasp-robot/
+├── nav_grasp_real/
+│   └── src/
+│       ├── slam/
+│       ├── visual_grasp/
+│       └── nav_grasp/
+└── nav_grasp_sim/
+    └── src/
+        └── tracer_navigate_w_grab/
+```
+
+主要工作区：
 
 | 路径 | 作用 |
 | --- | --- |
-| `slam_ws/src/lidar_bringup` | 雷达启动和 PointCloud2 转 `/scan` |
-| `slam_ws/src/slam` | SLAM Toolbox 建图与地图保存 |
-| `slam_ws/src/nav` | Nav2 定位、规划、控制和安全行为树 |
-| `visual_grasp_ws/src/visual_grasp_*` | 标定、RGB-D 检测、抓取规划和执行 |
-| `nav_grasp_ws/src/nav_grasp_mission` | YASMIN 任务状态机 |
+| `nav_grasp_real/src/slam/src/lidar_bringup` | 雷达启动和 PointCloud2 转 `/scan` |
+| `nav_grasp_real/src/slam/src/slam` | SLAM Toolbox 建图与地图保存 |
+| `nav_grasp_real/src/slam/src/nav` | Nav2 定位、规划、控制和安全行为树 |
+| `nav_grasp_real/src/visual_grasp/src/visual_grasp_*` | 标定、RGB-D 检测、抓取规划和执行 |
+| `nav_grasp_real/src/nav_grasp/src/nav_grasp_mission` | YASMIN 任务状态机 |
+| `nav_grasp_sim/src/tracer_navigate_w_grab` | Gazebo、Nav2、MoveIt 2 导航抓放仿真工作区 |
 
 > 安全提示：本项目会控制真实底盘和机械臂。实机运行前必须完成
 > 标定、低速验证和工作空间检查，并确保底盘与机械臂实体急停可用。
@@ -89,7 +107,7 @@ rosdep update
 
 ```bash
 vcs import . < dependencies.repos
-rosdep install --from-paths slam_ws/src visual_grasp_ws/src nav_grasp_ws/src \
+rosdep install --from-paths nav_grasp_real/src/slam/src nav_grasp_real/src/visual_grasp/src nav_grasp_real/src/nav_grasp/src \
   --ignore-src --rosdistro humble -r -y
 ```
 
@@ -99,10 +117,10 @@ Livox 驱动还需按上游说明安装 Livox SDK2。D435 和 PiPER/AGX 需先�
 复制本机配置：
 
 ```bash
-cp config/project.env.example config/project.env
+cp nav_grasp_real/project.env.example nav_grasp_real/project.env
 ```
 
-编辑 `config/project.env`，填写 ROS 2、底盘/雷达/机械臂 overlay、相机启停脚本、
+编辑 `nav_grasp_real/project.env`，填写 ROS 2、底盘/雷达/机械臂 overlay、相机启停脚本、
 CAN 初始化脚本、地图和任务参数路径。该文件已被 Git 忽略。
 
 构建所有工作区：
@@ -121,29 +139,29 @@ CAN 初始化脚本、地图和任务参数路径。该文件已被 Git 忽略�
 启动底盘和雷达后，在一个独立终端启动 SLAM Toolbox：
 
 ```bash
-source slam_ws/setup.bash
+source nav_grasp_real/src/slam/setup.bash
 ros2 launch slam mapping.launch.py
 ```
 
 使用另一个终端低速遥控底盘，走完环境并形成回环；再新开终端保存地图：
 
 ```bash
-mkdir -p "$PWD/slam_ws/maps"
-ros2 run slam save_map "$PWD/slam_ws/maps/my_map"
+mkdir -p "$PWD/nav_grasp_real/src/slam/maps"
+ros2 run slam save_map "$PWD/nav_grasp_real/src/slam/maps/my_map"
 ```
 
 最后一个参数是自定义保存前缀，不要添加扩展名。
 
-完整建图命令见 [`slam_ws/README.md`](slam_ws/README.md)。
+完整建图命令见 [`nav_grasp_real/src/slam/README.md`](nav_grasp_real/src/slam/README.md)。
 
 ### 4.2 Nav2 导航
 
 停止 SLAM 建图节点，保持底盘、雷达和 `/scan` 正常，加载已保存的地图：
 
 ```bash
-source slam_ws/setup.bash
+source nav_grasp_real/src/slam/setup.bash
 ros2 launch nav navigation.launch.py \
-  map:="$PWD/slam_ws/maps/my_map.yaml"
+  map:="$PWD/nav_grasp_real/src/slam/maps/my_map.yaml"
 ```
 
 Nav2 启动后必须：
@@ -160,7 +178,7 @@ Nav2 启动后必须：
 相机和机械臂驱动就绪后，在终端 1 以禁止实机指令模式启动：
 
 ```bash
-./visual_grasp_ws/start_perception.sh
+./nav_grasp_real/src/visual_grasp/start_perception.sh
 ```
 
 保持终端 1 运行，在终端 2 请求一次检测和规划：
@@ -173,10 +191,10 @@ ros2 service call /visual_grasp/plan_pick std_srvs/srv/Trigger '{}'
 停止只读实例，才可重新启动允许实机指令的实例：
 
 ```bash
-./visual_grasp_ws/start_perception.sh allow_robot_commands:=true
+./nav_grasp_real/src/visual_grasp/start_perception.sh allow_robot_commands:=true
 ```
 
-详细标定与抓取步骤见 [`visual_grasp_ws/README.md`](visual_grasp_ws/README.md)。
+详细标定与抓取步骤见 [`nav_grasp_real/src/visual_grasp/README.md`](nav_grasp_real/src/visual_grasp/README.md)。
 
 ### 4.4 状态机
 
@@ -184,9 +202,9 @@ ros2 service call /visual_grasp/plan_pick std_srvs/srv/Trigger '{}'
 
 ```bash
 source /opt/ros/humble/setup.bash
-source nav_grasp_ws/install/setup.bash
+source nav_grasp_real/src/nav_grasp/install/setup.bash
 ros2 launch nav_grasp_mission mission.launch.py \
-  params_file:="$PWD/nav_grasp_ws/src/nav_grasp_mission/config/mission.local.yaml"
+  params_file:="$PWD/nav_grasp_real/src/nav_grasp/src/nav_grasp_mission/config/mission.local.yaml"
 ```
 
 确认 RViz 初始位姿和现场安全后，显式启动任务：
@@ -202,31 +220,31 @@ ros2 service call /nav_grasp/start std_srvs/srv/Trigger '{}'
 - SLAM 地图已保存。
 - 手眼标定和夹爪检查已完成。
 - 抓取停车点已实测，`target_pose_configured: true`。
-- `config/project.env` 中硬件启停脚本和路径正确。
+- `nav_grasp_real/project.env` 中硬件启停脚本和路径正确。
 
 确认上述配置完成后，启动底盘、雷达、D435、Nav2/RViz、机械臂、视觉抓取和状态机：
 
 ```bash
-./nav_grasp_ws/start_full_mission.sh \
+./nav_grasp_real/src/nav_grasp/start_full_mission.sh \
   --map /absolute/path/to/map.yaml \
   --mission-config /absolute/path/to/mission.local.yaml
 ```
 
 启动器会等待人工在 RViz 设置 **2D Pose Estimate** 并检查安全，只有在
 主控终端按回车后才会提交导航—抓取—返航任务。详见
-[`nav_grasp_ws/README.md`](nav_grasp_ws/README.md)。
+[`nav_grasp_real/src/nav_grasp/README.md`](nav_grasp_real/src/nav_grasp/README.md)。
 
 ## 6. 验证与本机数据
 
 ```bash
-colcon test --base-paths visual_grasp_ws/src nav_grasp_ws/src
+colcon test --base-paths nav_grasp_real/src/visual_grasp/src nav_grasp_real/src/nav_grasp/src
 colcon test-result --verbose
 ```
 
-地图、手眼标定结果、夹爪行程报告、`config/project.env` 和 `*.local.yaml`
+地图、手眼标定结果、夹爪行程报告、`nav_grasp_real/project.env` 和 `*.local.yaml`
 都是机器人或场地专用数据，默认不提交到 GitHub。
 
-`slam_ws/src/pointcloud_to_laserscan` 是保留原许可证的上游源码，来源与
+`nav_grasp_real/src/slam/src/pointcloud_to_laserscan` 是保留原许可证的上游源码，来源与
 commit 记录见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。项目自有代码使用
 Apache-2.0，详见 [LICENSE](LICENSE)。
 
@@ -235,8 +253,8 @@ Apache-2.0，详见 [LICENSE](LICENSE)。
 项目初始版本由 [@lljj123](https://github.com/lljj123) 和
 [@GGbond61](https://github.com/GGbond61) 共同完成：
 
-- `@lljj123` 负责导航、SLAM、状态机以及 `slam_ws/`、`nav_grasp_ws/`。
-- `@GGbond61` 负责视觉抓取和 `visual_grasp_ws/`。
+- `@lljj123` 负责导航、SLAM、状态机以及 `nav_grasp_real/src/slam/`、`nav_grasp_real/src/nav_grasp/`。
+- `@GGbond61` 负责视觉抓取和 `nav_grasp_real/src/visual_grasp/`。
 
 两个独立模块在总项目中完成集成，共同构成导航—抓取机器人系统。
 

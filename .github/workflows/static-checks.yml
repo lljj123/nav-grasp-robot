@@ -18,7 +18,7 @@ jobs:
           find . -type f -name '*.zsh' -print0 | xargs -0 -n1 zsh -n
       - name: Check Python, XML, and YAML
         run: |
-          python3 -m compileall -q -f slam_ws visual_grasp_ws nav_grasp_ws
+          python3 -m compileall -q -f nav_grasp_real nav_grasp_sim
           python3 - <<'PY'
           from pathlib import Path
           import xml.etree.ElementTree as ET

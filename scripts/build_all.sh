@@ -8,5 +8,4 @@ source "$NAV_GRASP_ROOT/scripts/project_env.bash"
 "$VISUAL_WS/build.sh"
 "$MISSION_WS/build.sh"
 
-echo "All nav-grasp workspaces built successfully."
-
+echo "All nav-grasp real workspaces built successfully."

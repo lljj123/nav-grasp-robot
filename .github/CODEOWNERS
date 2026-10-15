@@ -1,7 +1,7 @@
 # Project-level files and integration changes are jointly reviewed.
 * @lljj123 @GGbond61
 
-/slam_ws/ @lljj123
-/visual_grasp_ws/ @GGbond61
-/nav_grasp_ws/ @lljj123
+/nav_grasp_real/src/slam/ @lljj123
+/nav_grasp_real/src/visual_grasp/ @GGbond61
+/nav_grasp_real/src/nav_grasp/ @lljj123
 /.github/ @lljj123 @GGbond61

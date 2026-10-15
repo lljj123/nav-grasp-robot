@@ -12,7 +12,7 @@
 # Editors and local configuration
 .vscode/
 .idea/
-config/project.env
+nav_grasp_real/project.env
 **/*.local.yaml
 
 # Runtime data and recordings
@@ -22,7 +22,7 @@ config/project.env
 **/logs/
 
 # Robot- and site-specific generated data
-visual_grasp_ws/calibration/handeye.yaml
-visual_grasp_ws/calibration/handeye_samples.yaml
-slam_ws/maps/*
-!slam_ws/maps/.gitkeep
+nav_grasp_real/src/visual_grasp/calibration/handeye.yaml
+nav_grasp_real/src/visual_grasp/calibration/handeye_samples.yaml
+nav_grasp_real/src/slam/maps/*
+!nav_grasp_real/src/slam/maps/.gitkeep

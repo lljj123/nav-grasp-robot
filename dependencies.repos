@@ -1,13 +1,13 @@
 repositories:
-  visual_grasp_ws/src/agx_arm_ros:
+  nav_grasp_real/src/visual_grasp/src/agx_arm_ros:
     type: git
     url: https://github.com/agilexrobotics/agx_arm_ros.git
     version: e4ccec1999279d063c2962030b9437b78b0d0db6
-  slam_ws/src/livox_ros_driver2:
+  nav_grasp_real/src/slam/src/livox_ros_driver2:
     type: git
     url: https://github.com/Livox-SDK/livox_ros_driver2.git
     version: 21445540f0d100dc86a7e6df312dd70bbdb4afdf
-  slam_ws/src/tracer_ros2:
+  nav_grasp_real/src/slam/src/tracer_ros2:
     type: git
     url: https://github.com/agilexrobotics/tracer_ros2.git
     version: 832ea9a48fe725d47d766a099d358062ea2f0f31

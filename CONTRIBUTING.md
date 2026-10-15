@@ -7,10 +7,11 @@
 
 | 路径 | 主要负责范围 |
 | --- | --- |
-| `slam_ws/` | 导航、SLAM、底盘/雷达接口及机器人 TF，由 `@lljj123` 负责 |
-| `visual_grasp_ws/` | 视觉检测、手眼标定、抓取规划及机械臂执行，由 `@GGbond61` 负责 |
-| `nav_grasp_ws/` | 导航—抓取—返航任务编排，由 `@lljj123` 负责 |
-| `config/`、`scripts/`、`.github/` | 公共配置、构建和工程化，双方共同维护 |
+| `nav_grasp_real/src/slam/` | 导航、SLAM、底盘/雷达接口及机器人 TF，由 `@lljj123` 负责 |
+| `nav_grasp_real/src/visual_grasp/` | 视觉检测、手眼标定、抓取规划及机械臂执行，由 `@GGbond61` 负责 |
+| `nav_grasp_real/src/nav_grasp/` | 导航—抓取—返航任务编排，由 `@lljj123` 负责 |
+| `nav_grasp_sim/` | Gazebo、Nav2、MoveIt 2 导航抓放仿真 |
+| `nav_grasp_real/project.env.example`、`scripts/`、`.github/` | 公共配置、构建和工程化，双方共同维护 |
 
 ## 开发流程
 
@@ -39,7 +40,7 @@ git push -u origin nav/update-costmap
 
 ```bash
 ./scripts/build_all.sh
-colcon test --base-paths visual_grasp_ws/src nav_grasp_ws/src
+colcon test --base-paths nav_grasp_real/src/visual_grasp/src nav_grasp_real/src/nav_grasp/src
 colcon test-result --verbose
 ```
 
